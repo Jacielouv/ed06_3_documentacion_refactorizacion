@@ -5,12 +5,11 @@ import org.ed06.model.Hotel;
 import org.ed06.model.Validacion;
 
 import java.time.LocalDate;
-import java.util.Scanner;
 import java.util.*;
-
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
+
     // Definimos constantes para las diferentes opciones del menú
     private static final int REGISTRAR_HABITACION = 1;
     private static final int LISTAR_HABITACIONES_DISPONIBLES = 2;
@@ -20,68 +19,29 @@ public class Main {
     private static final int REGISTRAR_CLIENTE = 22;
     private static final int SALIR = 0;
 
-    // Creamos un menú para el administrador con las diferentes opciones proporcionadas
+    private static final String MENSAJE_ERROR_VALIDACION = "Dato no válido. Inténtalo de nuevo.";
+    private static final String MENSAJE_REGISTRO_HABITACION = "Habitación registrada: ";
+    private static final String MENSAJE_REGISTRO_CLIENTE = "Cliente registrado: ";
+
     static Hotel hotel = new Hotel("El mirador", "Calle Entornos de Desarrollo 6", "123456789");
 
-
     public static void main(String[] args) {
-        // Variales locales
-        String tipo;
+        rellenarDummy();  // Rellenamos el Hotel con datos de prueba
 
-        // Rellenamos el Hotel
-        rellenarDummy();
-
-        // Mostramos el menú
         while (true) {
             mostrarMenu();
             int opcion = scanner.nextInt();
             scanner.nextLine();
+
             switch (opcion) {
                 case REGISTRAR_HABITACION:
-                    System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
-                    tipo = scanner.nextLine();
-                    System.out.println("Introduce el precio base de la habitación: ");
-                    double precioBase = scanner.nextDouble();
-                    scanner.nextLine();
-                    hotel.gestorHabitaciones.registrarHabitaciones(Arrays.asList(tipo), Arrays.asList(precioBase));
-                    System.out.println("Habitación registrada: " + tipo + " - Precio base: " + precioBase);
+                    registrarHabitacion();
                     break;
                 case LISTAR_HABITACIONES_DISPONIBLES:
                     hotel.gestorHabitaciones.listarHabitacionesDisponibles();
                     break;
                 case RESERVAR_HABITACION:
-                    System.out.println("Introduce el id del cliente: ");
-                    int clienteId = scanner.nextInt();
-                    System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
-                    tipo = scanner.next();
-                    System.out.println("Introduce la fecha de entrada (año): ");
-                    int anioEntrada = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.println("Introduce la fecha de entrada (mes): ");
-                    int mesEntrada = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.println("Introduce la fecha de entrada (día): ");
-                    int diaEntrada = scanner.nextInt();
-                    scanner.nextLine();
-                    LocalDate fechaEntrada = LocalDate.of(anioEntrada, mesEntrada, diaEntrada);
-                    System.out.println("Introduce la fecha de salida (año): ");
-                    int anioSalida = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.println("Introduce la fecha de salida (mes): ");
-                    int mesSalida = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.println("Introduce la fecha de salida (día): ");
-                    int diaSalida = scanner.nextInt();
-                    scanner.nextLine();
-                    LocalDate fechaSalida = LocalDate.of(anioSalida, mesSalida, diaSalida);
-                    int numeroHabitacion = hotel.reservarHabitacion(clienteId, tipo, fechaEntrada,
-                        fechaSalida);
-                    System.out.println("Datos de la habitacion");
-                    Habitacion habitacion = hotel.gestorHabitaciones.getHabitacion(numeroHabitacion);
-                    System.out.println(
-                        "Habitación #" + habitacion.getNumero() + " - Tipo: " + habitacion.getTipo()
-                            + " - Precio base: " + habitacion.getPrecioBase());
-                    System.out.println("Número de habitación reservada: " + numeroHabitacion);
+                    reservarHabitacion();
                     break;
                 case LISTAR_RESERVAS:
                     hotel.gestorReservas.listarReservas();
@@ -90,43 +50,7 @@ public class Main {
                     hotel.gestorClientes.listarClientes();
                     break;
                 case REGISTRAR_CLIENTE:
-                    String nombre;
-                    String email;
-                    String dni;
-
-                    while(true) {
-                        try {
-                            System.out.println("Introduce el nombre del cliente: ");
-                            nombre = scanner.next();
-                            Validacion.validarNombre(nombre);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Nombre no válido. Inténtalo de nuevo.");
-                        }
-                    }
-                    while (true) {
-                        try {
-                            System.out.println("Introduce el email del cliente: ");
-                            email = scanner.next();
-                            Validacion.validarEmail(email);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Email no válido. Inténtalo de nuevo.");
-                        }
-                    }
-                    while (true) {
-                        try {
-                            System.out.println("Introduce el DNI del cliente: ");
-                            dni = scanner.next();
-                            Validacion.validarDni(dni);
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("DNI no válido. Inténtalo de nuevo.");
-                        }
-                    }
-                    System.out.println("¿Es VIP? (true/false): ");
-                    boolean esVip = scanner.nextBoolean();
-                    hotel.gestorClientes.registrarCliente(nombre, email, dni, esVip);
+                    registrarCliente();
                     break;
                 case SALIR:
                     System.out.println("Saliendo del programa...");
@@ -150,16 +74,84 @@ public class Main {
         System.out.println("0. Salir");
     }
 
+    private static void registrarHabitacion() {
+        System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
+        String tipo = scanner.nextLine();
+        System.out.println("Introduce el precio base de la habitación: ");
+        double precioBase = scanner.nextDouble();
+        scanner.nextLine();
 
-    private static void rellenarDummy(){
-        // Registramos algunas habitaciones
+        hotel.gestorHabitaciones.registrarHabitaciones(Arrays.asList(tipo), Arrays.asList(precioBase));
+        System.out.println(MENSAJE_REGISTRO_HABITACION + tipo + " - Precio base: " + precioBase);
+    }
+
+    private static void reservarHabitacion() {
+        System.out.println("Introduce el id del cliente: ");
+        int clienteId = scanner.nextInt();
+        System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
+        String tipo = scanner.next();
+        LocalDate fechaEntrada = pedirFecha("entrada");
+        LocalDate fechaSalida = pedirFecha("salida");
+
+        int numeroHabitacion = hotel.reservarHabitacion(clienteId, tipo, fechaEntrada, fechaSalida);
+        Habitacion habitacion = hotel.gestorHabitaciones.getHabitacion(numeroHabitacion);
+
+        System.out.println("Habitación #" + habitacion.getNumero() + " - Tipo: " + habitacion.getTipo()
+                + " - Precio base: " + habitacion.getPrecioBase());
+        System.out.println("Número de habitación reservada: " + numeroHabitacion);
+    }
+
+    private static LocalDate pedirFecha(String tipoFecha) {
+        System.out.println("Introduce la fecha de " + tipoFecha + " (año): ");
+        int anio = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Introduce la fecha de " + tipoFecha + " (mes): ");
+        int mes = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Introduce la fecha de " + tipoFecha + " (día): ");
+        int dia = scanner.nextInt();
+        scanner.nextLine();
+        return LocalDate.of(anio, mes, dia);
+    }
+
+    private static void registrarCliente() {
+        String nombre = pedirDatoValido("nombre", Validacion::validarNombre);
+        String email = pedirDatoValido("email", Validacion::validarEmail);
+        String dni = pedirDatoValido("DNI", Validacion::validarDni);
+
+        System.out.println("¿Es VIP? (true/false): ");
+        boolean esVip = scanner.nextBoolean();
+
+        hotel.gestorClientes.registrarCliente(nombre, email, dni, esVip);
+        System.out.println(MENSAJE_REGISTRO_CLIENTE + nombre);
+    }
+
+    private static String pedirDatoValido(String tipoDato, ValidacionInterface validacion) {
+        String dato;
+        while (true) {
+            try {
+                System.out.println("Introduce el " + tipoDato + " del cliente: ");
+                dato = scanner.next();
+                validacion.validar(dato);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(MENSAJE_ERROR_VALIDACION);
+            }
+        }
+        return dato;
+    }
+
+    private static void rellenarDummy() {
         List<String> tiposHabitaciones = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
         List<Double> preciosHabitaciones = Arrays.asList(50.0, 80.0, 120.0, 200.0, 65.0, 100.0, 150.0, 250.0);
         hotel.gestorHabitaciones.registrarHabitaciones(tiposHabitaciones, preciosHabitaciones);
 
-        // Registramos algunos clientes
         hotel.gestorClientes.registrarCliente("Daniel", "daniel@daniel.com", "12345678A", true);
         hotel.gestorClientes.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
     }
 
+    // Interfaz funcional para validaciones
+    interface ValidacionInterface {
+        void validar(String dato) throws IllegalArgumentException;
+    }
 }
