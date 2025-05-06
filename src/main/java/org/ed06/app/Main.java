@@ -1,12 +1,13 @@
 package org.ed06.app;
 
-import org.ed06.model.Cliente;
 import org.ed06.model.Habitacion;
 import org.ed06.model.Hotel;
+import org.ed06.model.Validacion;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.*;
+
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
@@ -42,11 +43,11 @@ public class Main {
                     System.out.println("Introduce el precio base de la habitación: ");
                     double precioBase = scanner.nextDouble();
                     scanner.nextLine();
-                    hotel.registrarHabitacion(tipo, precioBase);
+                    hotel.gestorHabitaciones.registrarHabitaciones(Arrays.asList(tipo), Arrays.asList(precioBase));
                     System.out.println("Habitación registrada: " + tipo + " - Precio base: " + precioBase);
                     break;
                 case LISTAR_HABITACIONES_DISPONIBLES:
-                    hotel.listarHabitacionesDisponibles();
+                    hotel.gestorHabitaciones.listarHabitacionesDisponibles();
                     break;
                 case RESERVAR_HABITACION:
                     System.out.println("Introduce el id del cliente: ");
@@ -76,17 +77,17 @@ public class Main {
                     int numeroHabitacion = hotel.reservarHabitacion(clienteId, tipo, fechaEntrada,
                         fechaSalida);
                     System.out.println("Datos de la habitacion");
-                    Habitacion habitacion = hotel.getHabitacion(numeroHabitacion);
+                    Habitacion habitacion = hotel.gestorHabitaciones.getHabitacion(numeroHabitacion);
                     System.out.println(
                         "Habitación #" + habitacion.getNumero() + " - Tipo: " + habitacion.getTipo()
                             + " - Precio base: " + habitacion.getPrecioBase());
                     System.out.println("Número de habitación reservada: " + numeroHabitacion);
                     break;
                 case LISTAR_RESERVAS:
-                    hotel.listarReservas();
+                    hotel.gestorReservas.listarReservas();
                     break;
                 case LISTAR_CLIENTES:
-                    hotel.listarClientes();
+                    hotel.gestorClientes.listarClientes();
                     break;
                 case REGISTRAR_CLIENTE:
                     String nombre;
@@ -97,7 +98,7 @@ public class Main {
                         try {
                             System.out.println("Introduce el nombre del cliente: ");
                             nombre = scanner.next();
-                            Cliente.validarNombre(nombre);
+                            Validacion.validarNombre(nombre);
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Nombre no válido. Inténtalo de nuevo.");
@@ -107,7 +108,7 @@ public class Main {
                         try {
                             System.out.println("Introduce el email del cliente: ");
                             email = scanner.next();
-                            Cliente.validarEmail(email);
+                            Validacion.validarEmail(email);
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Email no válido. Inténtalo de nuevo.");
@@ -117,7 +118,7 @@ public class Main {
                         try {
                             System.out.println("Introduce el DNI del cliente: ");
                             dni = scanner.next();
-                            Cliente.validarDni(dni);
+                            Validacion.validarDni(dni);
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("DNI no válido. Inténtalo de nuevo.");
@@ -125,7 +126,7 @@ public class Main {
                     }
                     System.out.println("¿Es VIP? (true/false): ");
                     boolean esVip = scanner.nextBoolean();
-                    hotel.registrarCliente(nombre, email, dni, esVip);
+                    hotel.gestorClientes.registrarCliente(nombre, email, dni, esVip);
                     break;
                 case SALIR:
                     System.out.println("Saliendo del programa...");
@@ -154,11 +155,11 @@ public class Main {
         // Registramos algunas habitaciones
         List<String> tiposHabitaciones = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
         List<Double> preciosHabitaciones = Arrays.asList(50.0, 80.0, 120.0, 200.0, 65.0, 100.0, 150.0, 250.0);
-        hotel.registrarHabitaciones(tiposHabitaciones, preciosHabitaciones);
+        hotel.gestorHabitaciones.registrarHabitaciones(tiposHabitaciones, preciosHabitaciones);
 
         // Registramos algunos clientes
-        hotel.registrarCliente("Daniel", "daniel@daniel.com", "12345678A", true);
-        hotel.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
+        hotel.gestorClientes.registrarCliente("Daniel", "daniel@daniel.com", "12345678A", true);
+        hotel.gestorClientes.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
     }
 
 }

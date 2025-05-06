@@ -17,9 +17,6 @@ public class Hotel {
         this.telefono = telefono;
     }
 
-    public void inicializar() {
-        gestorReservas.inicializarReservas(gestorHabitaciones.getTodasHabitaciones());
-    }
 
     public int reservarHabitacion(int clienteId, String tipo, LocalDate entrada, LocalDate salida) {
         Cliente cliente = gestorClientes.obtenerCliente(clienteId);
