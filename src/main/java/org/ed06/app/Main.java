@@ -88,8 +88,8 @@ public class Main {
     private static void reservarHabitacion() {
         System.out.println("Introduce el id del cliente: ");
         int clienteId = scanner.nextInt();
-        System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
-        String tipo = scanner.next();
+        System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE, LITERAS): ");
+        String tipo = pedirTipoHabitacionValido();
         LocalDate fechaEntrada = pedirFecha("entrada");
         LocalDate fechaSalida = pedirFecha("salida");
 
@@ -99,6 +99,19 @@ public class Main {
         System.out.println("Habitación #" + habitacion.getNumero() + " - Tipo: " + habitacion.getTipo()
                 + " - Precio base: " + habitacion.getPrecioBase());
         System.out.println("Número de habitación reservada: " + numeroHabitacion);
+    }
+
+    private static String pedirTipoHabitacionValido() {
+        List<String> tiposValidos = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
+        String tipo;
+        while (true) {
+            tipo = scanner.nextLine().toUpperCase();
+            if (tiposValidos.contains(tipo)) {
+                return tipo;
+            } else {
+                System.out.println("Tipo de habitación no válido. Los valores posibles son: SIMPLE, DOBLE, SUITE, LITERAS.");
+            }
+        }
     }
 
     private static LocalDate pedirFecha(String tipoFecha) {
