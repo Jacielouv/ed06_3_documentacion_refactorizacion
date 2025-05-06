@@ -81,7 +81,7 @@ public class Main {
         double precioBase = scanner.nextDouble();
         scanner.nextLine();
 
-        hotel.gestorHabitaciones.registrarHabitaciones(Arrays.asList(tipo), Arrays.asList(precioBase));
+        hotel.gestorHabitaciones.registrarHabitaciones(List.of(tipo), List.of(precioBase));
         System.out.println(MENSAJE_REGISTRO_HABITACION + tipo + " - Precio base: " + precioBase);
     }
 

@@ -1,22 +1,21 @@
 package org.ed06.model;
 import java.time.LocalDate;
-import java.util.List;
 
 public class Hotel {
-    private final String nombre;
-    private final String direccion;
-    private final String telefono;
 
     public final GestorClientes gestorClientes = new GestorClientes();
     public final GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
     public final GestorReservas gestorReservas = new GestorReservas();
+
+    private final String nombre;
+    private final String direccion;
+    private final String telefono;
 
     public Hotel(String nombre, String direccion, String telefono) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
     }
-
 
     public int reservarHabitacion(int clienteId, String tipo, LocalDate entrada, LocalDate salida) {
         Cliente cliente = gestorClientes.obtenerCliente(clienteId);
