@@ -6,6 +6,7 @@ import org.ed06.model.Hotel;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
@@ -18,26 +19,16 @@ public class Main {
     private static final int REGISTRAR_CLIENTE = 22;
     private static final int SALIR = 0;
 
+    // Creamos un menú para el administrador con las diferentes opciones proporcionadas
+    static Hotel hotel = new Hotel("El mirador", "Calle Entornos de Desarrollo 6", "123456789");
+
+
     public static void main(String[] args) {
         // Variales locales
         String tipo;
 
-        // Creamos un menú para el administrador con las diferentes opciones proporcionadas
-        Hotel hotel = new Hotel("El mirador", "Calle Entornos de Desarrollo 6", "123456789");
-
-        // Registramos algunas habitaciones
-        hotel.registrarHabitacion("SIMPLE", 50);
-        hotel.registrarHabitacion("DOBLE", 80);
-        hotel.registrarHabitacion("SUITE", 120);
-        hotel.registrarHabitacion("LITERAS", 200);
-        hotel.registrarHabitacion("SIMPLE", 65);
-        hotel.registrarHabitacion("DOBLE", 100);
-        hotel.registrarHabitacion("SUITE", 150);
-        hotel.registrarHabitacion("LITERAS", 250);
-
-        // Registramos algunos clientes
-        hotel.registrarCliente("Daniel", "daniel@daniel.com", "12345678A", true);
-        hotel.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
+        // Rellenamos el Hotel
+        rellenarDummy();
 
         // Mostramos el menú
         while (true) {
@@ -157,4 +148,17 @@ public class Main {
         System.out.println("22. Registrar cliente");
         System.out.println("0. Salir");
     }
+
+
+    private static void rellenarDummy(){
+        // Registramos algunas habitaciones
+        List<String> tiposHabitaciones = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
+        List<Double> preciosHabitaciones = Arrays.asList(50.0, 80.0, 120.0, 200.0, 65.0, 100.0, 150.0, 250.0);
+        hotel.registrarHabitaciones(tiposHabitaciones, preciosHabitaciones);
+
+        // Registramos algunos clientes
+        hotel.registrarCliente("Daniel", "daniel@daniel.com", "12345678A", true);
+        hotel.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
+    }
+
 }

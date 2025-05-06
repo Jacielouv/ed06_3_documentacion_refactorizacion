@@ -11,6 +11,11 @@ public class Reserva {
     private LocalDate fechaFin;
     private double precioTotal;
 
+    // Descuentos aplicables
+    private double DESCUENTO_VIP=0.9;
+    private double INTERVALO_APLICAR_DESCUENTO=7; // Intervalo de fechas a superar para aplicar descuento
+    private double DESCUENTO_SUPERACION_INTERVALO=0.95;
+
     public Reserva(int id, Habitacion habitacion, Cliente cliente, LocalDate fechaInicio, LocalDate fechaFin) {
         this.id = id;
         this.habitacion = habitacion;
@@ -49,19 +54,18 @@ public class Reserva {
     public double calcularPrecioFinal() {
         //calculamos los días de la reserva
         int n = fechaFin.getDayOfYear() - fechaInicio.getDayOfYear();
+
         // Calculamos el precio base de la habitación por el número de noches de la reserva
-        double pb = habitacion.getPrecioBase() * n;
-        // Declaramos la variable para almacenar el precio final
-        double pf = pb;
+        double pf = habitacion.getPrecioBase() * n;
 
         // Si el cliente es VIP, aplicamos un descuento del 10%
         if (cliente.esVip) {
-            pf *= 0.9;
+            pf *= DESCUENTO_VIP;
         }
 
         // Si el intervalo de fechas es mayor a 7 días, aplicamos un descuento adicional del 5%
-        if (n > 7) {
-            pf *= 0.95;
+        if (n > INTERVALO_APLICAR_DESCUENTO) {
+            pf *= DESCUENTO_SUPERACION_INTERVALO;
         }
 
         // Devolvemos el precio final
