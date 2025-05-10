@@ -1,8 +1,17 @@
 package org.ed06.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
+/**
+ * La clase {@code Reserva} representa una reserva de habitación realizada por un cliente
+ * para un intervalo de fechas determinado. Calcula el precio total de la reserva considerando
+ * posibles descuentos.
+ * <p>
+ * Se aplican descuentos si el cliente es VIP o si la duración de la estancia supera cierto umbral.
+ * </p>
+ *
+ * @author José Cielo Fernández Caballero
+ */
 public class Reserva {
     private int id;
     private Habitacion habitacion;
@@ -12,10 +21,19 @@ public class Reserva {
     private double precioTotal;
 
     // Descuentos aplicables
-    private double DESCUENTO_VIP=0.9;
-    private double INTERVALO_APLICAR_DESCUENTO=7; // Intervalo de fechas a superar para aplicar descuento
-    private double DESCUENTO_SUPERACION_INTERVALO=0.95;
+    private double DESCUENTO_VIP = 0.9;
+    private double INTERVALO_APLICAR_DESCUENTO = 7;
+    private double DESCUENTO_SUPERACION_INTERVALO = 0.95;
 
+    /**
+     * Crea una nueva reserva con los datos proporcionados y calcula el precio total.
+     *
+     * @param id          identificador único de la reserva
+     * @param habitacion  habitación reservada
+     * @param cliente     cliente que realiza la reserva
+     * @param fechaInicio fecha de inicio de la reserva
+     * @param fechaFin    fecha de fin de la reserva
+     */
     public Reserva(int id, Habitacion habitacion, Cliente cliente, LocalDate fechaInicio, LocalDate fechaFin) {
         this.id = id;
         this.habitacion = habitacion;
@@ -25,53 +43,76 @@ public class Reserva {
         this.precioTotal = calcularPrecioFinal();
     }
 
+    /**
+     * @return el identificador único de la reserva
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return la habitación asociada a la reserva
+     */
     public Habitacion getHabitacion() {
         return habitacion;
     }
 
+    /**
+     * @return el cliente que ha realizado la reserva
+     */
     public Cliente getCliente() {
         return cliente;
     }
 
+    /**
+     * @return la fecha de inicio de la reserva
+     */
     public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
+    /**
+     * @return la fecha de fin de la reserva
+     */
     public LocalDate getFechaFin() {
         return fechaFin;
     }
 
+    /**
+     * @return el precio total de la reserva con descuentos aplicados
+     */
     public double getPrecioTotal() {
         return precioTotal;
     }
 
-    // Calcula el precio total de la reserva. Para calcular el precio total, se debe calcular el precio base de la habitación por el número de noches de la reserva. En el caso de que el cliente sea vip, se aplicará un descuento del 10%. Además, si el intervalo de fechas es mayor a 7 días, se aplicará un descuento adicional del 5%.
-    // Devuelve precio total de la reserva
+    /**
+     * Calcula el precio final de la reserva basado en:
+     * <ul>
+     *   <li>Precio base de la habitación por número de noches</li>
+     *   <li>Descuento del 10% si el cliente es VIP</li>
+     *   <li>Descuento adicional del 5% si la estancia supera 7 días</li>
+     * </ul>
+     *
+     * @return el precio total de la reserva con descuentos aplicados
+     */
     public double calcularPrecioFinal() {
-        //calculamos los días de la reserva
         int n = fechaFin.getDayOfYear() - fechaInicio.getDayOfYear();
-
-        // Calculamos el precio base de la habitación por el número de noches de la reserva
         double pf = habitacion.getPrecioBase() * n;
 
-        // Si el cliente es VIP, aplicamos un descuento del 10%
         if (cliente.esVip) {
             pf *= DESCUENTO_VIP;
         }
 
-        // Si el intervalo de fechas es mayor a 7 días, aplicamos un descuento adicional del 5%
         if (n > INTERVALO_APLICAR_DESCUENTO) {
             pf *= DESCUENTO_SUPERACION_INTERVALO;
         }
 
-        // Devolvemos el precio final
         return pf;
     }
 
+    /**
+     * Muestra por consola los detalles de la reserva: ID, habitación, cliente, fechas y precio total.
+     */
     public void mostrarReserva() {
         System.out.println("Reserva #" + id);
         System.out.println("Habitación #" + habitacion.getNumero() + " - Tipo: " + habitacion.getTipo() + " - Precio base: " + habitacion.getPrecioBase());

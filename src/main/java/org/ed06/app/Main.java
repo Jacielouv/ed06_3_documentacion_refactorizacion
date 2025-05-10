@@ -7,6 +7,13 @@ import org.ed06.model.Validacion;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * La clase Main es la clase principal que gestiona la interacción con el usuario.
+ * Esta clase permite al usuario registrar habitaciones, registrar clientes, reservar habitaciones,
+ * listar las habitaciones disponibles, las reservas realizadas y los clientes registrados.
+ *
+ * @author José Cielo Fernández Caballero
+ */
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
@@ -25,7 +32,14 @@ public class Main {
 
     static Hotel hotel = new Hotel("El mirador", "Calle Entornos de Desarrollo 6", "123456789");
 
+    /**
+     * Método principal que gestiona la ejecución de la aplicación.
+     * Muestra un menú al usuario y gestiona las opciones seleccionadas.
+     *
+     * @param args Los argumentos de la línea de comandos (no se utilizan en este caso).
+     */
     public static void main(String[] args) {
+
         rellenarDummy();  // Rellenamos el Hotel con datos de prueba
 
         while (true) {
@@ -63,6 +77,9 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra el menú principal con las opciones disponibles para el usuario.
+     */
     private static void mostrarMenu() {
         System.out.println("Menú:");
         System.out.println("1. Registrar habitación");
@@ -74,6 +91,10 @@ public class Main {
         System.out.println("0. Salir");
     }
 
+    /**
+     * Permite registrar una nueva habitación en el hotel. Solicita al usuario el tipo
+     * y el precio base de la habitación.
+     */
     private static void registrarHabitacion() {
         System.out.println("Introduce el tipo de habitación (SIMPLE, DOBLE, SUITE): ");
         String tipo = scanner.nextLine();
@@ -85,6 +106,10 @@ public class Main {
         System.out.println(MENSAJE_REGISTRO_HABITACION + tipo + " - Precio base: " + precioBase);
     }
 
+    /**
+     * Permite reservar una habitación en el hotel para un cliente.
+     * Solicita al usuario el id del cliente, el tipo de habitación y las fechas de entrada y salida.
+     */
     private static void reservarHabitacion() {
         System.out.println("Introduce el id del cliente: ");
         int clienteId = scanner.nextInt();
@@ -101,6 +126,12 @@ public class Main {
         System.out.println("Número de habitación reservada: " + numeroHabitacion);
     }
 
+    /**
+     * Pide al usuario un tipo de habitación válido. Solo se permiten los tipos:
+     * SIMPLE, DOBLE, SUITE, LITERAS.
+     *
+     * @return El tipo de habitación elegido por el usuario.
+     */
     private static String pedirTipoHabitacionValido() {
         List<String> tiposValidos = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
         String tipo;
@@ -114,6 +145,12 @@ public class Main {
         }
     }
 
+    /**
+     * Pide al usuario una fecha (ya sea de entrada o de salida) en formato año, mes, día.
+     *
+     * @param tipoFecha El tipo de fecha (entrada o salida) que se está solicitando.
+     * @return La fecha introducida por el usuario como un objeto LocalDate.
+     */
     private static LocalDate pedirFecha(String tipoFecha) {
         System.out.println("Introduce la fecha de " + tipoFecha + " (año): ");
         int anio = scanner.nextInt();
@@ -127,6 +164,10 @@ public class Main {
         return LocalDate.of(anio, mes, dia);
     }
 
+    /**
+     * Registra un nuevo cliente en el sistema. Solicita al usuario los datos del cliente,
+     * como el nombre, el email, el DNI y si es VIP.
+     */
     private static void registrarCliente() {
         String nombre = pedirDatoValido("nombre", Validacion::validarNombre);
         String email = pedirDatoValido("email", Validacion::validarEmail);
@@ -139,6 +180,14 @@ public class Main {
         System.out.println(MENSAJE_REGISTRO_CLIENTE + nombre);
     }
 
+    /**
+     * Pide un dato válido al usuario (como nombre, email, o DNI) y lo valida usando la función
+     * proporcionada por el parámetro `validacion`. Si el dato no es válido, se repite la solicitud.
+     *
+     * @param tipoDato El tipo de dato que se va a pedir (nombre, email, DNI).
+     * @param validacion La función de validación que se aplicará al dato introducido.
+     * @return El dato introducido por el usuario.
+     */
     private static String pedirDatoValido(String tipoDato, ValidacionInterface validacion) {
         String dato;
         while (true) {
@@ -148,12 +197,15 @@ public class Main {
                 validacion.validar(dato);
                 break;
             } catch (IllegalArgumentException e) {
-                System.out.println(MENSAJE_ERROR_VALIDACION);
+                System.out.println(MENSAJE_ERROR_VALIDACION + " Detalle: " + e.getMessage());
             }
         }
         return dato;
     }
 
+    /**
+     * Método que rellena el hotel con datos de prueba (habitaciones y clientes).
+     */
     private static void rellenarDummy() {
         List<String> tiposHabitaciones = Arrays.asList("SIMPLE", "DOBLE", "SUITE", "LITERAS");
         List<Double> preciosHabitaciones = Arrays.asList(50.0, 80.0, 120.0, 200.0, 65.0, 100.0, 150.0, 250.0);
@@ -163,7 +215,9 @@ public class Main {
         hotel.gestorClientes.registrarCliente("Adrián", "adrian@adrian.es", "87654321B", false);
     }
 
-    // Interfaz funcional para validaciones
+    /**
+     * Interfaz funcional para las validaciones de datos de los clientes.
+     */
     interface ValidacionInterface {
         void validar(String dato) throws IllegalArgumentException;
     }
